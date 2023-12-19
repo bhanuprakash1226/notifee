@@ -79,15 +79,12 @@ RCT_EXPORT_MODULE();
 }
 
 - (void)sendNotifeeCoreEvent:(NSDictionary *_Nonnull)eventBody {
-  dispatch_after(
-      dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (RCTRunningInAppExtension() ||
-            [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-          [self sendEventWithName:kReactNativeNotifeeNotificationBackgroundEvent body:eventBody];
-        } else {
-          [self sendEventWithName:kReactNativeNotifeeNotificationEvent body:eventBody];
-        }
-      });
+  if (RCTRunningInAppExtension() ||
+    [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    [self sendEventWithName:kReactNativeNotifeeNotificationBackgroundEvent body:eventBody];
+  } else {
+    [self sendEventWithName:kReactNativeNotifeeNotificationEvent body:eventBody];
+  }
 }
 
 // TODO(helenaford): look into a custom format style for React Native Method signatures
